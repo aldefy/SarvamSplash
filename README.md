@@ -16,6 +16,23 @@ The Sarvam logo is an ogee — a diamond with scalloped (puffed-out) edges. Thin
 
 Here's how `OgeeShape.kt` builds it:
 
+```
+Step 1: Diamond        Step 2: Add circles      Step 3: Find cusps       Step 4: Connect arcs
+
+       T                      T                        T                        T
+      / \                 .  . .                   .  . .                     ,--,
+     /   \               . /   \ .              x /  x  \ x                ,'    ',
+    /     \             . /     \ .            . /     \ .               ,'        ',
+   L       R           L .  .  . R           L x  x  x R             <          >
+    \     /             . \     / .            . \     / .               ',        ,'
+     \   /               . \   / .              x \  x  / x                ',    ,'
+      \ /                 .  . .                   .  . .                     '--'
+       B                      B                        B                        B
+
+                        circles pushed            outer intersections      arcs between cusps
+                        outward by "bulge"        = cusps (x)              = scalloped outline
+```
+
 1. Start with a vertical diamond (4 tip points: top, right, bottom, left)
 2. Along each diamond edge, place circle centers evenly spaced, pushed outward by a `bulge` factor — this controls how "puffy" the scallops are
 3. Each adjacent pair of circles overlaps. Find their outer intersection points — these are the cusps (the inward-pointing valleys between scallops)
@@ -29,6 +46,35 @@ One `Path` object. Built once, reused for every layer and every frame.
 ### The animation
 
 `SarvamSplashScreen.kt` draws 8 copies of that path on a single `Canvas`, each with a different scale and color:
+
+```
+Timeline (one loop cycle ~2.5s)
+
+0ms         600ms        1100ms       1900ms    1900ms       2300ms    2600ms
+ |            |            |            |         |            |         |
+ |-- EXPAND --|------->|   |            |         |            |         |
+ | L0..L7     |        |   |            |         |            |         |
+ | staggered  |        |   |            |         |            |         |
+ | 60ms apart |        |   |            |         |            |         |
+ |            |        |   |            |         |            |         |
+ |            |--OVERLAY FADE IN--|     |         |            |         |
+ |            |  (500ms)          |     |         |            |         |
+ |            |                   |     |         |            |         |
+ |            |            |      |- HOLD (solid)-|            |         |
+ |            |            |      |  gradient     |            |         |
+ |            |            |      |  800ms        |            |         |
+ |            |            |      |               |            |         |
+ |            |            |      |         SNAP! | OVERLAY    |  PAUSE  |
+ |            |            |      |       layers  | FADE OUT   |  300ms  |
+ |            |            |      |       -> 0    | (400ms)    |         |
+ |            |            |      |       hidden  | reveals    |         |
+ |            |            |      |       behind  | white      |         |
+ |            |            |      |       overlay | canvas     |  REPEAT
+ v            v            v      v         v     v            v    ---->
+
+What the user sees:
+ [mandala growing from center]  [solid gradient]  [gradient dissolves to white]
+```
 
 - **Staggered expansion:** Layer 0 (innermost) starts expanding first, layer 7 follows 60ms later. Inner layers scale to ~1x, outer layers overshoot to ~10x (way past screen edges). `FastOutSlowInEasing` makes the motion feel less robotic — fast start, gentle stop
 - **Gradient overlay:** Partway through expansion (600ms in), a full-screen vertical gradient fades in over everything. By the time the outer layers finish expanding, the gradient covers the screen completely — you never see the jagged edges of the oversized outer layers
