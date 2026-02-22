@@ -47,34 +47,7 @@ One `Path` object. Built once, reused for every layer and every frame.
 
 `SarvamSplashScreen.kt` draws 8 copies of that path on a single `Canvas`, each with a different scale and color:
 
-```
-Timeline (one loop cycle ~2.5s)
-
-0ms         600ms        1100ms       1900ms    1900ms       2300ms    2600ms
- |            |            |            |         |            |         |
- |-- EXPAND --|------->|   |            |         |            |         |
- | L0..L7     |        |   |            |         |            |         |
- | staggered  |        |   |            |         |            |         |
- | 60ms apart |        |   |            |         |            |         |
- |            |        |   |            |         |            |         |
- |            |--OVERLAY FADE IN--|     |         |            |         |
- |            |  (500ms)          |     |         |            |         |
- |            |                   |     |         |            |         |
- |            |            |      |- HOLD (solid)-|            |         |
- |            |            |      |  gradient     |            |         |
- |            |            |      |  800ms        |            |         |
- |            |            |      |               |            |         |
- |            |            |      |         SNAP! | OVERLAY    |  PAUSE  |
- |            |            |      |       layers  | FADE OUT   |  300ms  |
- |            |            |      |       -> 0    | (400ms)    |         |
- |            |            |      |       hidden  | reveals    |         |
- |            |            |      |       behind  | white      |         |
- |            |            |      |       overlay | canvas     |  REPEAT
- v            v            v      v         v     v            v    ---->
-
-What the user sees:
- [mandala growing from center]  [solid gradient]  [gradient dissolves to white]
-```
+![Animation Loop Timeline](animation_timeline.png)
 
 - **Staggered expansion:** Layer 0 (innermost) starts expanding first, layer 7 follows 60ms later. Inner layers scale to ~1x, outer layers overshoot to ~10x (way past screen edges). `FastOutSlowInEasing` makes the motion feel less robotic — fast start, gentle stop
 - **Gradient overlay:** Partway through expansion (600ms in), a full-screen vertical gradient fades in over everything. By the time the outer layers finish expanding, the gradient covers the screen completely — you never see the jagged edges of the oversized outer layers
