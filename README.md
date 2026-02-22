@@ -130,9 +130,9 @@ Install the Kotlin Multiplatform plugin, restart, and you'll get an `iosApp` run
 - JDK 17+
 - Kotlin 2.1.0, Compose Multiplatform 1.7.3
 
-## How this was built
+## Acknowledgments
 
-Code is mine. I used [Claude](https://claude.ai) to help write this README and explain how the math and animation work.
+This README was written with [Claude](https://claude.ai). Turns out describing circle-circle intersection math in plain English is harder than writing the code.
 
 ## What I'd add next
 
