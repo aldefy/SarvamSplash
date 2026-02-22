@@ -130,6 +130,10 @@ Install the Kotlin Multiplatform plugin, restart, and you'll get an `iosApp` run
 - JDK 17+
 - Kotlin 2.1.0, Compose Multiplatform 1.7.3
 
+## How this was built
+
+I used [Claude](https://claude.ai) to help write the code and this README. The design decisions, animation approach, iteration on timing/colors, and debugging were mine. Claude was the fast typist, I was the one staring at the emulator saying "no, that's still jumpy."
+
 ## What I'd add next
 
 - Logo text fade-in after the gradient settles
